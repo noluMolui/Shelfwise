@@ -319,6 +319,7 @@ Nyiko Vumani — [@nyikogivenvumani-web](https://github.com/nyikogivenvumani-web
 | Course | AI Software Developer |
 | Facilitator | Mnelisi Maswanganyi |
 | Repository | [GitHub – ShelfWise](https://github.com/noluMolui/Shelfwise.git) |
+|stitch link| | https://stitch.google.com/projects/5614692859162487904 |
 | Deployment | Vercel |
 | Database | Supabase PostgreSQL |
 | Initial Release | MVP |
