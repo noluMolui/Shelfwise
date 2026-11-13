@@ -1,26 +1,22 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { BrowserRouter } from 'react-router-dom';
+import { AuthProvider } from './app/AuthProvider';
+import { AppRoutes } from './app/AppRoutes';
 
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Layout from "./components/Layout";
-import SignUp from "./pages/SignUp";
-import Suppliers from "./pages/Suppliers";
-import LowStock from "./pages/LowStock";
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: { retry: 1, refetchOnWindowFocus: false },
+  },
+});
 
-function App() {
+export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-
-        <Route path="/signup" element={<SignUp />} />
-
-        <Route element={<Layout />}>
-          <Route path="/" element={<div className="p-8 text-2xl font-bold text-primary">Dashboard</div>} />
-          <Route path="/suppliers" element={<Suppliers />} />
-          <Route path="/low-stock" element={<LowStock />} />
-        </Route>
-
-      </Routes>
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }
-
-export default App;

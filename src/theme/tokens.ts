@@ -1,0 +1,33 @@
+export const tokens = {
+  color: {
+    primary: '#17324D',
+    accent: '#16A6A1',
+    background: '#F5F7FA',
+    surface: '#FFFFFF',
+    text: '#17212B',
+    onPrimary: '#FFFFFF',
+    error: '#C62828',
+    success: '#2E7D32',
+    warning: '#ED9B24',
+  },
+  font: {
+    family: 'Inter',
+    pageTitle: { size: 28, weight: 700 },
+    sectionHeading: { size: 20, weight: 600 },
+    body: { size: 16, weight: 400 },
+    small: { size: 12, weight: 400 },
+  },
+  space: {
+    1: 8,
+    2: 16,
+    3: 24,
+    4: 32,
+    screenDesktop: 24,
+    screenMobile: 16,
+  },
+  radius: { card: 12, input: 8, button: 8 },
+  size: { button: 44, touchMin: 44 },
+  layout: { maxWidth: 1200 },
+  breakpoint: { tablet: 640, desktop: 1024 },
+  toast: { durationMs: 3000 },
+} as const;
