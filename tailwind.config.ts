@@ -5,6 +5,11 @@ export default {
   theme: {
     extend: {
       colors: {
+        primary: '#17324D',
+        accent: '#16A6A1',
+        background: '#F5F7FA',
+        foreground: '#17212B',
+        warning: '#ED9B24',
         shelfwise: {
           primary: '#17324D',
           accent: '#16A6A1',
