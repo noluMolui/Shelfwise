@@ -221,68 +221,63 @@ These enhancements are outside the initial MVP scope.
 
 ### Prerequisites
 
-Ensure the following are installed:
-
-- Node.js (LTS version).
+- Node.js 24 LTS or newer.
 - npm.
 - Git.
-- A Supabase account.
+- Docker Desktop.
 
-### 1. Clone the Repository
+### 1. Install dependencies
 
-```bash
-git clone https://github.com/noluMolui/Shelfwise.git
-```
-
-### 2. Navigate to the Project
-
-```bash
-cd Shelfwise
-```
-
-### 3. Install Dependencies
-
-```bash
+```powershell
 npm install
 ```
 
-### 4. Configure Environment Variables
+### 2. Start local Supabase
 
-Copy the example environment file:
-
-```bash
-cp .env.example .env
+```powershell
+npx supabase start
 ```
 
-Open `.env` and fill in the values using your Supabase project credentials:
+Copy `.env.example` to `.env`, then set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` using the local values printed by `npx supabase status`.
 
-```env
-VITE_SUPABASE_URL=your_supabase_project_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-VITE_APP_ENV=development
+```powershell
+Copy-Item .env.example .env
 ```
 
-> ⚠️ Never commit `.env`, real API keys, passwords or the Supabase service-role key. Only `.env.example` (with placeholder values) belongs in the repository.
+### 3. Apply the database migration
 
-### 5. Set Up the Database
+```powershell
+npx supabase db reset
+```
 
-In your Supabase project, apply the migrations in `supabase/migrations/` (using the Supabase SQL editor or the Supabase CLI), then run `supabase/seed.sql` to load the test data.
+### 4. Create a local owner account
 
-Seed data is clearly marked as test data and contains no real personal details.
+Create an owner account at `http://127.0.0.1:5173/signup`. The signup form sends `full_name` and `business_name` as Supabase Auth metadata; the database trigger creates the business and owner profile. With the local stack running, confirmation emails can be opened in Inbucket at `http://127.0.0.1:54324`.
 
-### 6. Run the Development Server
+### 5. Run the app
 
-```bash
+```powershell
 npm run dev
 ```
 
-Vite will provide a local development URL in the terminal.
+Open `http://127.0.0.1:5173/signup` to create an account, or `/login` to sign in. If email confirmation is enabled, confirm the signup from Inbucket. Product management is available to signed-in business owners.
 
-### 7. Run Tests
+For a development-only S4 Add screen preview without Supabase, open `http://127.0.0.1:5173/preview/s4`. It uses sample values and never saves changes; this route is not included in production builds.
 
-```bash
-npm run test
+### 6. Run tests and checks
+
+```powershell
+npm test
+npm run check
 ```
+
+### Production deployment prerequisites
+
+- Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` as Vercel environment variables, then redeploy.
+- Apply `supabase/migrations/20261112180000_s4_product_foundation.sql` to the production Supabase project.
+- Set the Supabase Auth Site URL and allowed redirect URLs to the deployed app URL.
+
+Never commit `.env`, real API keys, passwords, or a Supabase service-role key. Only placeholders belong in `.env.example`.
 
 ---
 
