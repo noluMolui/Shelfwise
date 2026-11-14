@@ -162,7 +162,8 @@
 }
 
 .catalogue-search input::placeholder {
-  color: #939eaa;
+  color: #546272;
+  opacity: 1;
 }
 
 .catalogue-search input::-webkit-search-cancel-button {
@@ -274,7 +275,7 @@
 }
 
 .catalogue-quantity.is-low {
-  color: #d58616 !important;
+  color: #17212b !important;
 }
 
 .catalogue-price {

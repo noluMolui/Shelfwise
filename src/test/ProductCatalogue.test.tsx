@@ -1,6 +1,20 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
+import Layout from "../components/Layout";
 import ProductCatalogue from "../pages/ProductCatalogue";
+
+describe("Navigation", () => {
+  it("does not link to the unavailable stock screen", () => {
+    const { container } = render(
+      <MemoryRouter initialEntries={["/products"]}>
+        <Layout />
+      </MemoryRouter>,
+    );
+
+    expect(container.querySelector('a[href="/stock"]')).toBeNull();
+  });
+});
 
 describe("Product Catalogue", () => {
   it("shows product details and low-stock status", () => {
@@ -82,5 +96,15 @@ describe("Product Catalogue", () => {
     expect(screen.getByText("Product saved.")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Dismiss notification" }));
     expect(screen.queryByText("Product saved.")).toBeNull();
+  });
+
+  it("shows the save toast again after a later successful save", () => {
+    const { rerender } = render(<ProductCatalogue displayState="success" />);
+    fireEvent.click(screen.getByRole("button", { name: "Dismiss notification" }));
+
+    rerender(<ProductCatalogue displayState="loading" />);
+    rerender(<ProductCatalogue displayState="success" />);
+
+    expect(screen.getByText("Product saved.")).toBeTruthy();
   });
 });

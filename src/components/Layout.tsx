@@ -14,7 +14,6 @@ import "./Layout.css";
 const navigation = [
   { name: "Dashboard", path: "/", icon: LayoutDashboard },
   { name: "Products", path: "/products", icon: Package },
-  { name: "Stock", path: "/stock", icon: Package },
   { name: "Low Stock", path: "/low-stock", icon: AlertTriangle },
   { name: "Suppliers", path: "/suppliers", icon: Truck },
 ];

@@ -69,6 +69,31 @@ const sampleProducts: Product[] = [
   },
 ];
 
+function SaveNotification() {
+  const [visible, setVisible] = useState(true);
+
+  if (!visible) return null;
+
+  return (
+    <div className="catalogue-success-toast" role="status">
+      <span className="catalogue-success-icon">
+        <Check size={14} aria-hidden="true" />
+      </span>
+      <span>
+        <strong>Product saved.</strong>
+        <small>Your changes have been saved to the catalogue.</small>
+      </span>
+      <button
+        type="button"
+        aria-label="Dismiss notification"
+        onClick={() => setVisible(false)}
+      >
+        <X size={15} aria-hidden="true" />
+      </button>
+    </div>
+  );
+}
+
 function ProductCatalogue({
   products = sampleProducts,
   userRole = "business_owner",
@@ -77,7 +102,6 @@ function ProductCatalogue({
 }: ProductCatalogueProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All categories");
-  const [successToastVisible, setSuccessToastVisible] = useState(true);
   const isOwner = userRole === "business_owner";
   const categories = [...new Set(products.map((product) => product.category))];
 
@@ -112,24 +136,7 @@ function ProductCatalogue({
       </div>
 
       <section className="catalogue-panel" aria-label="Product catalogue">
-        {displayState === "success" && successToastVisible && (
-          <div className="catalogue-success-toast" role="status">
-            <span className="catalogue-success-icon">
-              <Check size={14} aria-hidden="true" />
-            </span>
-            <span>
-              <strong>Product saved.</strong>
-              <small>Your changes have been saved to the catalogue.</small>
-            </span>
-            <button
-              type="button"
-              aria-label="Dismiss notification"
-              onClick={() => setSuccessToastVisible(false)}
-            >
-              <X size={15} aria-hidden="true" />
-            </button>
-          </div>
-        )}
+        {displayState === "success" && <SaveNotification />}
 
         <div className="catalogue-filters">
           <label className="catalogue-search">
