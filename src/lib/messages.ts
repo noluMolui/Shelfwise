@@ -13,4 +13,11 @@ export const messages = {
   signInError: 'We couldn’t sign you in. Check your details and try again.',
   signUpError: 'We couldn’t create your account. Please try again.',
   configurationError: 'ShelfWise is not connected to Supabase. Check the app configuration.',
+  invalidMovementQuantity: 'Enter a quantity greater than zero.',
+  insufficientStock: 'There is not enough stock for this movement.',
+  recordMovementError: 'We couldn’t record this movement. Please try again.',
+  loadMovementsError: 'We couldn’t load stock activity. Please try again.',
+  loadMovementProductsError: 'We couldn’t load your products. Please try again.',
+  movementSaved: 'Stock movement recorded.',
+  offlineMovementsRead: 'You’re offline. Showing previously loaded stock activity where available.',
 } as const;

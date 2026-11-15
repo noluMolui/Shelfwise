@@ -4,6 +4,8 @@ import { ProductFormPage } from '../pages/ProductFormPage';
 import { DashboardPage } from '../pages/DashboardPage';
 import { SignupPage } from '../pages/SignupPage';
 import { LoginPage } from '../pages/LoginPage';
+import { StockMovementsPage } from '../pages/StockMovementsPage';
+import { RecordMovementPage } from '../pages/RecordMovementPage';
 import { RequireOwner, RequireProfile, RequireSession } from './RouteGuards';
 
 export function AppRoutes() {
@@ -26,7 +28,8 @@ export function AppRoutes() {
             <Route path="/products/new" element={<ProductFormPage mode="add" />} />
             <Route path="/products/:id/edit" element={<ProductFormPage mode="edit" />} />
           </Route>
-          <Route path="/stock" element={<PlaceholderPage title="Stock" />} />
+          <Route path="/stock" element={<StockMovementsPage />} />
+          <Route path="/stock/new" element={<RecordMovementPage />} />
           <Route path="/low-stock" element={<PlaceholderPage title="Low Stock" />} />
           <Route path="/suppliers" element={<PlaceholderPage title="Suppliers" />} />
         </Route>

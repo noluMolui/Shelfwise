@@ -1016,17 +1016,17 @@ All tests in this phase are pgTAP tests in `supabase/tests/database/`.
 
 **Step 2: Backend (Green)**
 
-- [ ] No new migrations (table, trigger and policies exist from Phase 2).
+- [ ] Add the stock-movement table, RLS policies, immutable-history trigger and atomic quantity-update trigger. The current repository contains only the Phase 4 product migration, so the Phase 2 schema prerequisite is absent; add a new migration rather than editing the existing one.
 
 **Step 3: Frontend (Green)**
 
-- [ ] `src/lib/rules/movement.ts`; `src/lib/api/movements.ts` (OP12, OP13).
-- [ ] Movement table/row components and filters.
-- [ ] S5 Stock Movements and S6 Record Stock Movement, built to their designs with every state. S6 checks the quantity in the app first, and still shows the server's message if the database refuses.
+- [x] `src/lib/rules/movement.ts`; `src/lib/api/movements.ts` (OP12, OP13).
+- [x] Movement table/row components and filters.
+- [x] S5 Stock Movements and S6 Record Stock Movement, built to their designs with every state. S6 checks the quantity in the app first, and still shows the server's message if the database refuses.
 
 **Step 4: Refactor and full check**
 
-- [ ] `npm run check` passes.
+- [x] `npm run check` passes.
 - [ ] `npm run test:e2e -- 02-stock` passes (T-E2E-2).
 
 **Step 5: Manual checks (human)**
@@ -1427,6 +1427,7 @@ Rules BR1–BR12 are each used by: BR1 (F1, F2, F3, F5), BR2 (F1), BR3 (F1, F2),
 | Phase | Date | Status | Automated tests (passed / total) | Commit | Notes |
 | --- | --- | --- | --- | --- | --- |
 | — | — | Not started | — | — | — |
+| 5 | 2026-11-13 | Implemented locally; DB integration, E2E and manual checks pending | 31 / 31 | — | Added the missing stock-movement migration, RLS and atomic quantity trigger; implemented S5/S6. `npm run check` and `npm run build` pass. The planned integration/E2E cases still need a configured Supabase project; apply the migration and complete authenticated/manual checks before marking Phase 5 done. |
 
 ---
 

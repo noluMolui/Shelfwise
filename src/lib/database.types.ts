@@ -105,6 +105,29 @@ export type Database = {
           is_archived?: boolean;
         }
       >;
+      stock_movements: Table<
+        {
+          id: string;
+          business_id: string;
+          product_id: string;
+          user_id: string;
+          movement_type: MovementType;
+          quantity: number;
+          note: string | null;
+          created_at: string;
+        },
+        {
+          id?: string;
+          business_id?: string;
+          product_id: string;
+          user_id?: string;
+          movement_type: MovementType;
+          quantity: number;
+          note?: string | null;
+          created_at?: string;
+        },
+        never
+      >;
     };
     Views: Record<string, never>;
     Functions: {
@@ -126,6 +149,7 @@ export const productCategories = [
 ] as const;
 
 export type ProductCategory = (typeof productCategories)[number];
+export type MovementType = 'incoming' | 'outgoing';
 
 export type Product = Database['public']['Tables']['products']['Row'] & {
   supplier?: Pick<Database['public']['Tables']['suppliers']['Row'], 'id' | 'name'> | null;
@@ -135,6 +159,12 @@ export type ProductInput = Pick<
   Database['public']['Tables']['products']['Insert'],
   'name' | 'sku' | 'category' | 'description' | 'unit_price' | 'low_stock_threshold' | 'supplier_id'
 >;
+
+export type StockMovement =
+  Database['public']['Tables']['stock_movements']['Row'] & {
+    product?: Pick<Product, 'name' | 'sku'>;
+    recorder?: Pick<UserProfile, 'full_name'>;
+  };
 
 export type UserProfile = Database['public']['Tables']['user_profiles']['Row'] & {
   business_name: string;
