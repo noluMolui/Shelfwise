@@ -1,0 +1,3 @@
+-- Seed data placeholder.
+-- Add only the test fixtures defined in Implementation Plan Section 8.7 once
+-- the database schema and seed-account workflow are implemented.
