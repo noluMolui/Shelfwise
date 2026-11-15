@@ -1,10 +1,14 @@
 import { useState, type FormEvent } from 'react';
-import { Eye, EyeOff, Package } from 'lucide-react';
+import { CircleAlert, Eye, EyeOff, Package } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '../components/common/Button';
 import { TextField } from '../components/common/TextField';
 import { messages } from '../lib/messages';
 import { getSupabaseClient } from '../lib/supabase/client';
+import { useOnlineStatus } from '../hooks/useOnlineStatus';
+
+const offlineLoginMessage = 'You’re offline. Check your connection and try again.';
+const unverifiedEmailMessage = 'Please verify your email before logging in.';
 
 type LoginLocationState = {
   from?: {
@@ -17,6 +21,7 @@ type LoginLocationState = {
 export function LoginPage() {
   const location = useLocation();
   const navigate = useNavigate();
+  const online = useOnlineStatus();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -26,6 +31,10 @@ export function LoginPage() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
+    if (!online) {
+      setError(offlineLoginMessage);
+      return;
+    }
     setSubmitting(true);
 
     try {
@@ -35,7 +44,11 @@ export function LoginPage() {
       });
 
       if (signInError) {
-        setError(messages.signInError);
+        setError(
+          'code' in signInError && signInError.code === 'email_not_confirmed'
+            ? unverifiedEmailMessage
+            : messages.signInError,
+        );
         return;
       }
 
@@ -69,6 +82,8 @@ export function LoginPage() {
           <p className="page-subtitle">Sign in to manage your business inventory.</p>
         </header>
 
+        {!online ? <p className="notice notice--offline" role="status">{offlineLoginMessage}</p> : null}
+
         <form className="auth-form" onSubmit={(event) => void handleSubmit(event)}>
           <TextField
             label="Email address"
@@ -77,6 +92,7 @@ export function LoginPage() {
             autoComplete="email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
+            disabled={submitting}
             required
           />
           <div className="auth-form__password">
@@ -87,11 +103,13 @@ export function LoginPage() {
               autoComplete="current-password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
+              disabled={submitting}
               required
             />
             <button
               className="auth-form__password-toggle"
               type="button"
+              disabled={submitting}
               onClick={() => setShowPassword((visible) => !visible)}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
               aria-pressed={showPassword}
@@ -100,10 +118,15 @@ export function LoginPage() {
             </button>
           </div>
 
-          {error ? <p className="notice notice--error" role="alert">{error}</p> : null}
+          {error ? (
+            <p className="notice notice--error" role="alert">
+              <CircleAlert size={18} aria-hidden="true" />
+              <span>{error}</span>
+            </p>
+          ) : null}
 
           <Button type="submit" className="auth-form__submit" loading={submitting}>
-            Sign in
+            Log in
           </Button>
         </form>
 
