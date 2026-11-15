@@ -1,0 +1,16 @@
+export const messages = {
+  required: 'This field is required.',
+  invalidPrice: 'Enter a valid price of zero or more.',
+  invalidThreshold: 'Enter a whole number of zero or more.',
+  duplicateSku: 'This SKU is already in use by your business.',
+  saveProductError: 'We couldn’t save this product. Please try again.',
+  loadProductError: 'We couldn’t load this product. Please try again.',
+  loadProductsError: 'We couldn’t load your products. Please try again.',
+  notAllowed: 'You don’t have permission to access this information.',
+  offline: 'You’re offline. Your changes have not been saved.',
+  offlineRead: 'You’re offline. Showing previously loaded products where available.',
+  saved: 'Product saved.',
+  signInError: 'We couldn’t sign you in. Check your details and try again.',
+  signUpError: 'We couldn’t create your account. Please try again.',
+  configurationError: 'ShelfWise is not connected to Supabase. Check the app configuration.',
+} as const;

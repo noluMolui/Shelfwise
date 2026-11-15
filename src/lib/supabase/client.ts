@@ -1,17 +1,27 @@
-import { createClient } from "@supabase/supabase-js";
-import type { Database } from "../../types/database";
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import type { Database } from '../database.types';
+import { messages } from '../messages';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+let client: SupabaseClient<Database> | undefined;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error(
-    "Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY before using Supabase.",
-  );
+export function getSupabaseClient(): SupabaseClient<Database> {
+  if (client) return client;
+
+  const url = import.meta.env.VITE_SUPABASE_URL;
+  const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+  if (!url || !anonKey || anonKey.startsWith('replace-with-')) {
+    throw new Error(messages.configurationError);
+  }
+
+  client = createClient<Database>(url, anonKey);
+  return client;
 }
 
-/**
- * Browser client uses only public VITE_ variables.
- * Never add a service-role key to this module or any code under src/.
- */
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey);
+export function hasSupabaseConfig(): boolean {
+  return Boolean(
+    import.meta.env.VITE_SUPABASE_URL &&
+      import.meta.env.VITE_SUPABASE_ANON_KEY &&
+      !import.meta.env.VITE_SUPABASE_ANON_KEY.startsWith('replace-with-'),
+  );
+}
