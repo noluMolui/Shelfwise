@@ -1,0 +1,267 @@
+.movement-page {
+  min-height: 100vh;
+  background: #f5f7fa;
+}
+
+.movement-header {
+  display: flex;
+  min-height: 64px;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 1px solid #e1e7ed;
+  background: #fff;
+  padding: 0 32px;
+}
+
+.movement-brand {
+  color: #17324d;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  text-decoration: none;
+}
+
+.movement-brand span {
+  color: #16a6a1;
+}
+
+.movement-header-title {
+  border-left: 1px solid #e1e7ed;
+  color: #344252;
+  font-size: 13px;
+  font-weight: 600;
+  padding-left: 20px;
+}
+
+.movement-main {
+  display: flex;
+  justify-content: center;
+  padding: 36px 20px 60px;
+}
+
+.movement-card {
+  width: 100%;
+  max-width: 590px;
+  border: 1px solid #e1e7ed;
+  border-radius: 9px;
+  background: #fff;
+  padding: 30px;
+}
+
+.movement-heading h1 {
+  margin: 0;
+  color: #17324d;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.movement-heading p,
+.movement-hint {
+  margin: 6px 0 0;
+  color: #596a7b;
+  font-size: 12px;
+}
+
+.movement-preview {
+  margin: 20px 0 0;
+  border: 1px solid #e1e7ed;
+  border-radius: 6px;
+  background: #f5f7fa;
+  color: #344252;
+  font-size: 12px;
+  padding: 10px 12px;
+}
+
+.movement-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 16px;
+  border: 1px solid #edc78d;
+  border-radius: 6px;
+  background: #fff8eb;
+  color: #674718;
+  font-size: 12px;
+  padding: 12px;
+}
+
+.movement-notice svg {
+  flex: none;
+}
+
+.movement-card form {
+  margin-top: 22px;
+}
+
+.movement-field {
+  margin: 0 0 20px;
+  padding: 0;
+  border: 0;
+}
+
+.movement-field label:not(.movement-type-option),
+.movement-field legend,
+.movement-label {
+  display: block;
+  margin-bottom: 7px;
+  color: #17212b;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.movement-field label > span,
+.movement-field legend > span {
+  color: #b3261e;
+}
+
+.movement-field select,
+.movement-field > input,
+.movement-field textarea {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid #cbd4dd;
+  border-radius: 6px;
+  background: #fff;
+  color: #17212b;
+  font: inherit;
+  font-size: 13px;
+  padding: 10px 12px;
+}
+
+.movement-field textarea {
+  min-height: 86px;
+  resize: vertical;
+}
+
+.movement-field textarea::placeholder {
+  color: #596a7b;
+  opacity: 1;
+}
+
+.movement-field select:focus-visible,
+.movement-field > input:focus-visible,
+.movement-field textarea:focus-visible,
+.movement-type-option:focus-within,
+.movement-actions a:focus-visible,
+.movement-actions button:focus-visible {
+  outline: 2px solid #16a6a1;
+  outline-offset: 2px;
+}
+
+.movement-field [aria-invalid="true"] {
+  border-color: #b3261e;
+}
+
+.movement-error {
+  margin: 6px 0 0;
+  color: #b3261e;
+  font-size: 12px;
+}
+
+.movement-stock {
+  display: flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid #e1e7ed;
+  border-radius: 6px;
+  background: #f5f7fa;
+  color: #405166;
+  font-size: 13px;
+  padding: 0 12px;
+}
+
+.movement-stock span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.movement-stock strong {
+  color: #17324d;
+}
+
+.movement-type-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.movement-type-option {
+  display: flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid #cbd4dd;
+  border-radius: 6px;
+  color: #344252;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.movement-type-option:has(input:checked) {
+  border-color: #17324d;
+  background: #f5f7fa;
+  color: #17324d;
+  font-weight: 600;
+}
+
+.movement-type-option input {
+  accent-color: #17324d;
+}
+
+.movement-actions {
+  display: flex;
+  gap: 10px;
+  border-top: 1px solid #e1e7ed;
+  padding-top: 20px;
+}
+
+.movement-save,
+.movement-cancel {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #17324d;
+  border-radius: 6px;
+  background: #17324d;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 0 20px;
+  text-decoration: none;
+}
+
+.movement-cancel {
+  border-color: #cbd4dd;
+  background: #fff;
+  color: #344252;
+}
+
+@media (max-width: 640px) {
+  .movement-header {
+    min-height: 58px;
+    padding: 0 16px;
+  }
+
+  .movement-main {
+    padding: 20px 14px 36px;
+  }
+
+  .movement-card {
+    padding: 20px;
+  }
+
+  .movement-heading h1 {
+    font-size: 19px;
+  }
+
+  .movement-actions {
+    flex-direction: column;
+  }
+}

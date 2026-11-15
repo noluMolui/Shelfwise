@@ -1,75 +1,53 @@
-# React + TypeScript + Vite
+﻿# ShelfWise Design Documentation
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Design project
 
-Currently, two official plugins are available:
+[Open the ShelfWise Stitch project](https://stitch.google.com/projects/5614692859162487904)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Design exports
 
-## React Compiler
+| File | Description | Status |
+|---|---|---|
+| S1.png | Login | Exported |
+| S2.png | Dashboard | Exported |
+| S3.png | Product catalogue | Exported |
+| S4.png | Product form | Exported |
+| S5.png | Stock movements | Exported |
+| S6.png | Record stock movement | Exported |
+| S7.png | Low-stock products | Exported |
+| S8.png | Supplier management | Exported |
+| S9.png | Sign-up | Exported |
+| SG.png | Shared components and design system | Exported |
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Outstanding designs
 
-## Expanding the ESLint configuration
+The following exports are still required:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- S10.png: Forgot password and password reset.
+- M1.png: Supplier form.
+- M2.png: Archive product confirmation.
+- M3.png: Delete supplier confirmation.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Design system
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+| Element | Specification |
+|---|---|
+| Primary | #17324D |
+| Accent | #16A6A1 |
+| Background | #F5F7FA |
+| Main text | #17212B |
+| Typography | Inter |
+| Icons | Lucide |
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Responsive requirements
 
-```
+Designs must support:
+- Desktop: 1024px and above.
+- Tablet: 640px–1024px.
+- Mobile: below 640px.
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+## Design ownership
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Designer / Frontend Developer: Qiyaam Moodley
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
-```
+Design exports are reference materials. Each screen must be checked against the approved implementation plan before development.
