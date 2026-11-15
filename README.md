@@ -6,6 +6,13 @@ ShelfWise is a web-based inventory management platform designed to help small bu
 
 The goal is to replace scattered spreadsheets and handwritten inventory records with one centralised, reliable and easy-to-use platform.
 
+## Design references
+
+The approved visual direction and exported screen designs are maintained in the
+[ShelfWise Stitch project](https://stitch.google.com/projects/5614692859162487904).
+The exported designs cover login, dashboard, product catalogue and form, stock
+movements, low-stock products, suppliers, sign-up, and shared design components.
+
 ---
 
 ## Project Overview

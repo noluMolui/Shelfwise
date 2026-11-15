@@ -49,7 +49,7 @@ export async function listProducts(options: ProductListOptions): Promise<Product
     .select('*')
     .eq('is_archived', false)
     .order('name')
-    .range(page * pageSize, (page + 1) * pageSize);
+    .range(page * pageSize, (page + 1) * pageSize - 1);
 
   if (category) query = query.eq('category', category as ProductCategory);
   if (safeSearch) {
