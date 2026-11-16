@@ -21,6 +21,8 @@ Many small businesses still rely on manual methods to manage their inventory. Th
 
 ShelfWise aims to simplify these processes by providing a centralised platform where businesses can manage their inventory and gain better visibility into their stock levels and inventory value.
 
+### live deployed link : https://shelfwise-psi.vercel.app/login
+
 ### Our Objectives
 
 - Simplify product and inventory management.
