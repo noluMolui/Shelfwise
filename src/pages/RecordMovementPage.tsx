@@ -15,22 +15,32 @@ import type { MovementType } from '../lib/database.types';
 import { messages } from '../lib/messages';
 import { validateMovementQuantity } from '../lib/rules/movement';
 
-export function RecordMovementPage() {
+type Props = { preview?: boolean };
+
+const previewProducts = [
+  { id: 'preview-product-1', name: 'A4 Exercise Book', sku: 'ST001', quantity: 40 },
+  { id: 'preview-product-2', name: 'Blue Ballpoint Pen', sku: 'ST002', quantity: 6 },
+  { id: 'preview-product-3', name: '2L Bottled Water', sku: 'DR001', quantity: 24 },
+  { id: 'preview-product-4', name: 'USB-C Cable', sku: 'EL001', quantity: 3 },
+];
+
+export function RecordMovementPage({ preview = false }: Props) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const online = useOnlineStatus();
   const productsQuery = useQuery({
-    queryKey: ['activeProductsForMovement'],
+    queryKey: preview ? ['previewActiveProductsForMovement'] : ['activeProductsForMovement'],
     queryFn: listActiveProducts,
-    enabled: online,
+    enabled: online && !preview,
+    initialData: preview ? previewProducts : undefined,
   });
-  const [productId, setProductId] = useState('');
+  const [productId, setProductId] = useState(preview ? previewProducts[0].id : '');
   const [movementType, setMovementType] = useState<MovementType>('incoming');
   const [quantity, setQuantity] = useState('');
   const [note, setNote] = useState('');
   const [quantityError, setQuantityError] = useState<string | undefined>();
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const products = productsQuery.data ?? [];
+  const products = preview ? previewProducts : productsQuery.data ?? [];
   const selectedProduct = products.find((product) => product.id === productId);
 
   useEffect(() => {
@@ -67,6 +77,10 @@ export function RecordMovementPage() {
       setSubmitError(messages.insufficientStock);
       return;
     }
+    if (preview) {
+      setSubmitError('This is a visual preview. Stock movements will not be saved.');
+      return;
+    }
 
     saveMutation.mutate({
       productId: selectedProduct.id,
@@ -78,7 +92,7 @@ export function RecordMovementPage() {
 
   return (
     <>
-      <AppHeader title="Record movement" signedIn />
+      <AppHeader title="Record movement" signedIn={!preview} />
       <main className="page-shell movement-form-shell">
         <div className="movement-form-heading">
           <Link className="breadcrumb-link" to="/stock">Stock Movements</Link>
@@ -91,6 +105,11 @@ export function RecordMovementPage() {
             Add or adjust inventory for incoming stock, dispatch, or physical stock count.
           </p>
 
+          {preview ? (
+            <div className="notice notice--warning movement-form-alert" role="note">
+              Preview only. Stock movements will not be saved.
+            </div>
+          ) : null}
           {!online ? <OfflineBanner message={messages.offline} /> : null}
           {submitError ? (
             <div className="notice notice--error movement-form-alert" role="alert">
@@ -218,9 +237,26 @@ export function RecordMovementPage() {
                 >
                   Save
                 </Button>
-                <Link to="/stock" className="button button--secondary button--link">
-                  Cancel
-                </Link>
+                {preview ? (
+                  <button
+                    type="button"
+                    className="button button--secondary"
+                    onClick={() => {
+                      setProductId(previewProducts[0].id);
+                      setMovementType('incoming');
+                      setQuantity('');
+                      setNote('');
+                      setQuantityError(undefined);
+                      setSubmitError(null);
+                    }}
+                  >
+                    Reset preview
+                  </button>
+                ) : (
+                  <Link to="/stock" className="button button--secondary button--link">
+                    Cancel
+                  </Link>
+                )}
               </div>
             </form>
           ) : null}

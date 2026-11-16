@@ -14,10 +14,16 @@ export function AppRoutes() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
       {import.meta.env.DEV ? (
-        <Route
-          path="/preview/s4"
-          element={<ProductFormPage mode="add" preview />}
-        />
+        <>
+          <Route
+            path="/preview/s4"
+            element={<ProductFormPage mode="add" preview />}
+          />
+          <Route
+            path="/preview/s6"
+            element={<RecordMovementPage preview />}
+          />
+        </>
       ) : null}
       <Route element={<RequireSession />}>
         <Route element={<RequireProfile />}>

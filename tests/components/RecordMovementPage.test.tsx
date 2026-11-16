@@ -28,7 +28,7 @@ const activeProduct = {
   quantity: 6,
 };
 
-function renderPage() {
+function renderPage({ preview = false }: { preview?: boolean } = {}) {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
@@ -37,7 +37,7 @@ function renderPage() {
     <QueryClientProvider client={queryClient}>
       <MemoryRouter initialEntries={['/stock/new']}>
         <Routes>
-          <Route path="/stock/new" element={<RecordMovementPage />} />
+          <Route path="/stock/new" element={<RecordMovementPage preview={preview} />} />
           <Route path="/stock" element={<p>Stock history</p>} />
         </Routes>
       </MemoryRouter>
@@ -105,5 +105,23 @@ describe('RecordMovementPage', () => {
       quantity: 2,
       note: null,
     });
+  });
+
+  it('uses sample products and never saves in preview mode', async () => {
+    vi.mocked(listActiveProducts).mockClear();
+    vi.mocked(recordStockMovement).mockClear();
+    renderPage({ preview: true });
+
+    expect(await screen.findByText('40', { selector: 'output' })).toBeInTheDocument();
+    expect(screen.getByRole('note')).toHaveTextContent(/preview only/i);
+    expect(listActiveProducts).not.toHaveBeenCalled();
+
+    fireEvent.change(screen.getByLabelText(/quantity/i), {
+      target: { value: '2' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Save' }));
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(/will not be saved/i);
+    expect(recordStockMovement).not.toHaveBeenCalled();
   });
 });
