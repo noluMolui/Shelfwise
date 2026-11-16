@@ -3,10 +3,12 @@ import { listProducts } from '../../src/lib/api/products';
 
 const mocks = vi.hoisted(() => ({
   range: vi.fn(),
+  rpc: vi.fn(),
 }));
 
 vi.mock('../../src/lib/supabase/client', () => ({
   getSupabaseClient: () => ({
+    rpc: mocks.rpc,
     from: () => ({
       select: () => ({
         eq: () => ({
@@ -42,6 +44,7 @@ vi.mock('../../src/lib/supabase/client', () => ({
 describe('listProducts pagination', () => {
   beforeEach(() => {
     mocks.range.mockClear();
+    mocks.rpc.mockReset();
   });
 
   it('requests exactly 20 products on the first page', async () => {
@@ -56,5 +59,31 @@ describe('listProducts pagination', () => {
     await listProducts({ page: 1, search: '', category: '' });
 
     expect(mocks.range).toHaveBeenCalledWith(20, 39);
+  });
+
+  it('creates a product and passes opening stock to the transactional movement function', async () => {
+    const { createProduct } = await import('../../src/lib/api/products');
+    mocks.rpc.mockResolvedValue({ data: 'product-1', error: null });
+
+    await createProduct({
+      name: 'A4 Exercise Book',
+      sku: 'ST001',
+      category: 'Stationery',
+      description: null,
+      unit_price: 25,
+      low_stock_threshold: null,
+      supplier_id: null,
+    }, 12);
+
+    expect(mocks.rpc).toHaveBeenCalledWith('create_product_with_opening_stock', {
+      p_name: 'A4 Exercise Book',
+      p_sku: 'ST001',
+      p_category: 'Stationery',
+      p_description: null,
+      p_unit_price: 25,
+      p_low_stock_threshold: null,
+      p_supplier_id: null,
+      p_opening_stock_quantity: 12,
+    });
   });
 });

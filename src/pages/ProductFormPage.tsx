@@ -7,7 +7,7 @@ import { OfflineBanner } from '../components/common/OfflineBanner';
 import { SelectField } from '../components/common/SelectField';
 import { TextField } from '../components/common/TextField';
 import { useOnlineStatus } from '../hooks/useOnlineStatus';
-import { getProduct, saveProduct } from '../lib/api/products';
+import { createProduct, getProduct, saveProduct } from '../lib/api/products';
 import { ProductAccessError } from '../lib/api/errors';
 import { listSupplierOptions } from '../lib/api/suppliers';
 import { messages } from '../lib/messages';
@@ -24,6 +24,7 @@ const emptyValues: ProductFormValues = {
   unitPrice: '',
   lowStockThreshold: '',
   supplierId: '',
+  openingQuantity: '0',
 };
 
 const previewValues: ProductFormValues = {
@@ -34,6 +35,7 @@ const previewValues: ProductFormValues = {
   unitPrice: '15.00',
   lowStockThreshold: '10',
   supplierId: 'preview-supplier',
+  openingQuantity: '0',
 };
 
 const previewSuppliers = [{ id: 'preview-supplier', name: 'Mzansi Stationers' }];
@@ -47,6 +49,7 @@ function toFormValues(product: Awaited<ReturnType<typeof getProduct>>): ProductF
     unitPrice: product.unit_price.toFixed(2),
     lowStockThreshold: product.low_stock_threshold?.toString() ?? '',
     supplierId: product.supplier_id ?? '',
+    openingQuantity: '0',
   };
 }
 
@@ -74,7 +77,20 @@ export function ProductFormPage({ mode, preview = false }: Props) {
     enabled: !preview,
   });
   const saveMutation = useMutation({
-    mutationFn: (input: ProductInput) => saveProduct(input, isAdd ? undefined : id),
+    mutationFn: async ({
+      input,
+      openingQuantity,
+    }: {
+      input: ProductInput;
+      openingQuantity: number;
+    }) => {
+      if (isAdd) {
+        await createProduct(input, openingQuantity);
+        return;
+      }
+      if (!id) throw new Error(messages.saveProductError);
+      await saveProduct(input, id);
+    },
   });
 
   useEffect(() => {
@@ -123,11 +139,23 @@ export function ProductFormPage({ mode, preview = false }: Props) {
         values.lowStockThreshold.trim() === '' ? null : Number(values.lowStockThreshold),
       supplier_id: values.supplierId || null,
     };
+    const openingQuantity = values.openingQuantity.trim() === ''
+      ? 0
+      : Number(values.openingQuantity);
 
     try {
-      await saveMutation.mutateAsync(input);
-      await queryClient.invalidateQueries({ queryKey: ['products'] });
-      await queryClient.invalidateQueries({ queryKey: ['product', id] });
+      await saveMutation.mutateAsync({ input, openingQuantity });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['products'] }),
+        queryClient.invalidateQueries({ queryKey: ['product', id] }),
+        ...(isAdd && openingQuantity > 0
+          ? [
+              queryClient.invalidateQueries({ queryKey: ['stockMovements'] }),
+              queryClient.invalidateQueries({ queryKey: ['dashboard'] }),
+              queryClient.invalidateQueries({ queryKey: ['activeProductsForMovement'] }),
+            ]
+          : []),
+      ]);
       navigate('/products', { replace: true, state: { message: messages.saved } });
     } catch (error) {
       setFormError(
@@ -285,6 +313,21 @@ export function ProductFormPage({ mode, preview = false }: Props) {
               error={errors.unitPrice}
               hint="Selling price per unit."
             />
+            {isAdd ? (
+              <TextField
+                label="Opening stock quantity"
+                name="openingQuantity"
+                type="number"
+                min="0"
+                max="2147483647"
+                step="1"
+                value={values.openingQuantity}
+                onChange={(event) => updateField('openingQuantity', event.target.value)}
+                disabled={disabled}
+                error={errors.openingQuantity}
+                hint="Optional. A positive quantity is recorded as an incoming stock movement."
+              />
+            ) : null}
             <TextField
               label="Low-stock threshold"
               name="lowStockThreshold"
@@ -353,7 +396,11 @@ export function ProductFormPage({ mode, preview = false }: Props) {
               ) : null}
             </div>
           </form>
-          <p className="form-note">Stock quantity is updated by recording stock movements.</p>
+          <p className="form-note">
+            {isAdd
+              ? 'Opening stock is recorded as an incoming movement. Later stock changes are recorded as movements too.'
+              : 'Stock quantity is updated by recording stock movements.'}
+          </p>
         </section>
       </main>
     </>

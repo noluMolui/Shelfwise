@@ -80,21 +80,40 @@ export async function getProduct(id: string): Promise<Product> {
 
 export async function saveProduct(
   values: ProductInput,
-  productId?: string,
+  productId: string,
 ): Promise<Product> {
   const supabase = getSupabaseClient();
-  const result = productId
-    ? await supabase
-        .from('products')
-        .update(values)
-        .eq('id', productId)
-        .select('*')
-        .single()
-    : await supabase.from('products').insert(values).select('*').single();
+  const result = await supabase
+    .from('products')
+    .update(values)
+    .eq('id', productId)
+    .select('*')
+    .single();
 
   if (result.error) {
     const message = getProductSaveError(result.error);
     throw new Error(message);
   }
   return attachSupplier(result.data);
+}
+
+export async function createProduct(
+  values: ProductInput,
+  openingStockQuantity: number,
+): Promise<void> {
+  const { error } = await getSupabaseClient().rpc('create_product_with_opening_stock', {
+    p_name: values.name,
+    p_sku: values.sku,
+    p_category: values.category,
+    p_description: values.description ?? null,
+    p_unit_price: values.unit_price,
+    p_low_stock_threshold: values.low_stock_threshold ?? null,
+    p_supplier_id: values.supplier_id ?? null,
+    p_opening_stock_quantity: openingStockQuantity,
+  });
+
+  if (error) {
+    const message = getProductSaveError(error);
+    throw new Error(message);
+  }
 }

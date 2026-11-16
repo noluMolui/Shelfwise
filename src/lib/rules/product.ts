@@ -9,6 +9,7 @@ export type ProductFormValues = {
   unitPrice: string;
   lowStockThreshold: string;
   supplierId: string;
+  openingQuantity: string;
 };
 
 export type ProductFormErrors = Partial<Record<keyof ProductFormValues, string>>;
@@ -48,6 +49,17 @@ export function validateProduct(values: ProductFormValues): ProductFormErrors {
     const threshold = Number(values.lowStockThreshold);
     if (!Number.isInteger(threshold) || threshold < 0 || threshold > 2_147_483_647) {
       errors.lowStockThreshold = messages.invalidThreshold;
+    }
+  }
+
+  if (values.openingQuantity.trim() !== '') {
+    const openingQuantity = Number(values.openingQuantity);
+    if (
+      !Number.isInteger(openingQuantity) ||
+      openingQuantity < 0 ||
+      openingQuantity > 2_147_483_647
+    ) {
+      errors.openingQuantity = messages.invalidOpeningQuantity;
     }
   }
 

@@ -3,7 +3,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ProductFormPage } from '../../src/pages/ProductFormPage';
-import { getProduct, saveProduct } from '../../src/lib/api/products';
+import { createProduct, getProduct, saveProduct } from '../../src/lib/api/products';
 import { listSupplierOptions } from '../../src/lib/api/suppliers';
 import type { Product } from '../../src/lib/database.types';
 import { messages } from '../../src/lib/messages';
@@ -15,6 +15,7 @@ vi.mock('../../src/hooks/useOnlineStatus', () => ({
 }));
 
 vi.mock('../../src/lib/api/products', () => ({
+  createProduct: vi.fn(),
   getProduct: vi.fn(),
   saveProduct: vi.fn(),
 }));
@@ -49,6 +50,7 @@ function renderPage(path: string, mode: 'add' | 'edit' | 'view', preview = false
     <QueryClientProvider client={queryClient}>
       <MemoryRouter initialEntries={[path]}>
         <Routes>
+          <Route path="/products" element={<p>Products</p>} />
           <Route path="/products/new" element={<ProductFormPage mode={mode} preview={preview} />} />
           <Route path="/products/:id" element={<ProductFormPage mode={mode} />} />
         </Routes>
@@ -73,7 +75,43 @@ describe('ProductFormPage', () => {
 
     expect(await screen.findAllByText('This field is required.')).toHaveLength(2);
     expect(screen.getByLabelText(/product name/i)).toHaveValue('New item');
-    expect(screen.queryByLabelText(/quantity/i)).not.toBeInTheDocument();
+    expect(screen.getByLabelText(/opening stock quantity/i)).toHaveValue(0);
+  });
+
+  it('creates a product with opening stock recorded through the movement workflow', async () => {
+    renderPage('/products/new', 'add');
+    fireEvent.change(screen.getByLabelText(/product name/i), {
+      target: { value: 'New item' },
+    });
+    fireEvent.change(screen.getByLabelText(/sku/i), {
+      target: { value: 'NEW-001' },
+    });
+    fireEvent.change(screen.getByLabelText(/category/i), {
+      target: { value: 'General' },
+    });
+    fireEvent.change(screen.getByLabelText(/unit price/i), {
+      target: { value: '12.50' },
+    });
+    fireEvent.change(screen.getByLabelText(/opening stock quantity/i), {
+      target: { value: '8' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => {
+      expect(createProduct).toHaveBeenCalledWith(
+        {
+          name: 'New item',
+          sku: 'NEW-001',
+          category: 'General',
+          description: null,
+          unit_price: 12.5,
+          low_stock_threshold: null,
+          supplier_id: null,
+        },
+        8,
+      );
+    });
+    expect(saveProduct).not.toHaveBeenCalled();
   });
 
   it('blocks offline saves and does not call the product API', async () => {
@@ -100,7 +138,7 @@ describe('ProductFormPage', () => {
   });
 
   it('keeps the form open with the duplicate-SKU message', async () => {
-    vi.mocked(saveProduct).mockRejectedValue(new Error(messages.duplicateSku));
+    vi.mocked(createProduct).mockRejectedValue(new Error(messages.duplicateSku));
     renderPage('/products/new', 'add');
     fireEvent.change(screen.getByLabelText(/product name/i), {
       target: { value: 'Blue Ballpoint Pen' },

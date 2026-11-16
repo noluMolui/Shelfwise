@@ -131,6 +131,19 @@ export type Database = {
     };
     Views: Record<string, never>;
     Functions: {
+      create_product_with_opening_stock: {
+        Args: {
+          p_name: string;
+          p_sku: string;
+          p_category: string;
+          p_description: string | null;
+          p_unit_price: number;
+          p_low_stock_threshold: number | null;
+          p_supplier_id: string | null;
+          p_opening_stock_quantity: number;
+        };
+        Returns: string;
+      };
       current_business_id: { Args: Record<string, never>; Returns: string };
       current_user_role: { Args: Record<string, never>; Returns: string };
     };

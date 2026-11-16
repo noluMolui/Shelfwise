@@ -10,6 +10,7 @@ const validProduct: ProductFormValues = {
   unitPrice: '25.00',
   lowStockThreshold: '0',
   supplierId: '',
+  openingQuantity: '0',
 };
 
 describe('validateProduct', () => {
@@ -41,10 +42,20 @@ describe('validateProduct', () => {
       ...validProduct,
       unitPrice: '-0.01',
       lowStockThreshold: '2.5',
+      openingQuantity: '2.5',
     });
 
     expect(errors.unitPrice).toBe(messages.invalidPrice);
     expect(errors.lowStockThreshold).toBe(messages.invalidThreshold);
+    expect(errors.openingQuantity).toBe(messages.invalidOpeningQuantity);
+  });
+
+  it('accepts zero opening stock and rejects negative or out-of-range quantities', () => {
+    expect(validateProduct({ ...validProduct, openingQuantity: '0' }).openingQuantity).toBeUndefined();
+    expect(validateProduct({ ...validProduct, openingQuantity: '-1' }).openingQuantity)
+      .toBe(messages.invalidOpeningQuantity);
+    expect(validateProduct({ ...validProduct, openingQuantity: '2147483648' }).openingQuantity)
+      .toBe(messages.invalidOpeningQuantity);
   });
 
   it('rejects prices beyond two decimals and thresholds outside the database integer range', () => {

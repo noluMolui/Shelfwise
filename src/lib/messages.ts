@@ -2,6 +2,7 @@ export const messages = {
   required: 'This field is required.',
   invalidPrice: 'Enter a valid price of zero or more.',
   invalidThreshold: 'Enter a whole number of zero or more.',
+  invalidOpeningQuantity: 'Enter a whole-number opening quantity of zero or more.',
   duplicateSku: 'This SKU is already in use by your business.',
   saveProductError: 'We couldn’t save this product. Please try again.',
   loadProductError: 'We couldn’t load this product. Please try again.',
