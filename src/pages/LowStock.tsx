@@ -6,6 +6,8 @@ import {
   Package,
   ArrowDown,
 } from "lucide-react";
+import { AppHeader } from "../components/common/AppHeader";
+import { MainNavigation } from "../components/common/MainNavigation";
 
 type Product = {
   id: number;
@@ -68,7 +70,12 @@ function LowStock() {
   );
 
   return (
-    <div className="min-h-screen bg-background p-6 md:p-8">
+    <>
+      <AppHeader title="Low Stock" signedIn />
+      <div className="app-layout">
+        <MainNavigation />
+        <main className="page-shell">
+          <div className="min-h-screen bg-background p-6 md:p-8">
 
       {/* Page Heading */}
       <div className="mb-8">
@@ -198,7 +205,10 @@ function LowStock() {
         Sample inventory information for frontend development.
       </p>
 
-    </div>
+          </div>
+        </main>
+      </div>
+    </>
   );
 }
 

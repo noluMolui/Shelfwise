@@ -9,6 +9,8 @@ import {
   MapPin,
   MoreVertical,
 } from "lucide-react";
+import { AppHeader } from "../components/common/AppHeader";
+import { MainNavigation } from "../components/common/MainNavigation";
 
 type Supplier = {
   id: number;
@@ -58,7 +60,12 @@ function Suppliers() {
   );
 
   return (
-    <div className="min-h-screen bg-background p-6 md:p-8">
+    <>
+      <AppHeader title="Suppliers" signedIn />
+      <div className="app-layout">
+        <MainNavigation />
+        <main className="page-shell">
+          <div className="min-h-screen bg-background p-6 md:p-8">
 
       {/* Page Heading */}
       <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
@@ -211,7 +218,10 @@ function Suppliers() {
         Sample supplier information for frontend development.
       </p>
 
-    </div>
+          </div>
+        </main>
+      </div>
+    </>
   );
 }
 

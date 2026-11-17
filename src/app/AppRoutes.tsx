@@ -6,6 +6,8 @@ import { SignupPage } from '../pages/SignupPage';
 import { LoginPage } from '../pages/LoginPage';
 import { StockMovementsPage } from '../pages/StockMovementsPage';
 import { RecordMovementPage } from '../pages/RecordMovementPage';
+import LowStock from '../pages/LowStock';
+import Suppliers from '../pages/Suppliers';
 import { RequireOwner, RequireProfile, RequireSession } from './RouteGuards';
 
 export function AppRoutes() {
@@ -36,20 +38,11 @@ export function AppRoutes() {
           </Route>
           <Route path="/stock" element={<StockMovementsPage />} />
           <Route path="/stock/new" element={<RecordMovementPage />} />
-          <Route path="/low-stock" element={<PlaceholderPage title="Low Stock" />} />
-          <Route path="/suppliers" element={<PlaceholderPage title="Suppliers" />} />
+          <Route path="/low-stock" element={<LowStock />} />
+          <Route path="/suppliers" element={<Suppliers />} />
         </Route>
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
-  );
-}
-
-function PlaceholderPage({ title }: { title: string }) {
-  return (
-    <main className="page-shell">
-      <h1 className="page-title">{title}</h1>
-      <p>This screen is not part of the current build.</p>
-    </main>
   );
 }
