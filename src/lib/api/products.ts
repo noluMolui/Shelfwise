@@ -48,15 +48,14 @@ export async function listProducts(options: ProductListOptions): Promise<Product
     .from('products')
     .select('*')
     .eq('is_archived', false)
-    .order('name')
-    .range(page * pageSize, (page + 1) * pageSize - 1);
+    .order('name');
 
   if (category) query = query.eq('category', category as ProductCategory);
   if (safeSearch) {
     query = query.or(`name.ilike.%${safeSearch}%,sku.ilike.%${safeSearch}%`);
   }
 
-  const { data, error } = await query;
+  const { data, error } = await query.range(page * pageSize, (page + 1) * pageSize - 1);
   if (error) throw error;
 
   const products = await attachSuppliers(data);

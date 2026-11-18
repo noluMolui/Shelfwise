@@ -50,7 +50,12 @@ function sastStartOfNextDay(date: string): string {
 function getMovementSaveError(error: { code?: string; message?: string }): string {
   const details = `${error.code ?? ''} ${error.message ?? ''}`.toLowerCase();
   if (details.includes('insufficient_stock')) return messages.insufficientStock;
-  if (details.includes('invalid_quantity') || error.code === '23514') {
+  if (
+    details.includes('invalid_quantity') ||
+    error.code === '23514' ||
+    error.code === '22P02' ||
+    error.code === '22003'
+  ) {
     return messages.invalidMovementQuantity;
   }
   if (error.code === '42501' || error.code === 'PGRST301') return messages.notAllowed;
