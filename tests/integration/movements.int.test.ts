@@ -116,6 +116,15 @@ describe('stock movement integration', () => {
     })).rejects.toThrow(messages.invalidMovementQuantity);
   });
 
+  it('keeps malformed product IDs on the generic movement error', async () => {
+    await expect(recordStockMovement({
+      productId: 'not-a-uuid',
+      movementType: 'incoming',
+      quantity: 1,
+      note: null,
+    })).rejects.toThrow(messages.recordMovementError);
+  });
+
   it('rejects outgoing stock above availability without saving a movement', async () => {
     const productId = await createProduct(4);
 

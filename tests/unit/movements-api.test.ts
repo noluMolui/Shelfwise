@@ -41,6 +41,23 @@ describe('recordStockMovement API errors', () => {
     })).rejects.toThrow(messages.invalidMovementQuantity);
   });
 
+  it('keeps malformed product UUID errors generic', async () => {
+    mocks.single.mockResolvedValue({
+      data: null,
+      error: {
+        code: '22P02',
+        message: 'invalid input syntax for type uuid: "not-a-uuid"',
+      },
+    });
+
+    await expect(recordStockMovement({
+      productId: 'not-a-uuid',
+      movementType: 'incoming',
+      quantity: 1,
+      note: null,
+    })).rejects.toThrow(messages.recordMovementError);
+  });
+
   it('maps insufficient stock errors returned by the database', async () => {
     mocks.single.mockResolvedValue({
       data: null,

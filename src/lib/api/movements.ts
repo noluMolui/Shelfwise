@@ -47,13 +47,20 @@ function sastStartOfNextDay(date: string): string {
   return sastStartOfDay(nextCalendarDate(date));
 }
 
-function getMovementSaveError(error: { code?: string; message?: string }): string {
+function getMovementSaveError(error: {
+  code?: string;
+  message?: string;
+  details?: string | null;
+  hint?: string | null;
+}): string {
   const details = `${error.code ?? ''} ${error.message ?? ''}`.toLowerCase();
+  const errorContext = [error.message, error.details, error.hint].filter(Boolean).join(' ');
+  const identifiesQuantity = /\bquantity\b|\btype integer\b/i.test(errorContext);
   if (details.includes('insufficient_stock')) return messages.insufficientStock;
   if (
     details.includes('invalid_quantity') ||
     error.code === '23514' ||
-    error.code === '22P02' ||
+    (error.code === '22P02' && identifiesQuantity) ||
     error.code === '22003'
   ) {
     return messages.invalidMovementQuantity;
