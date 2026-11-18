@@ -1,9 +1,9 @@
 import { useEffect, useState, type FormEvent } from 'react';
+import { AlertCircle, ArrowDown, ArrowUp, Package, WifiOff } from 'lucide-react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
 import { AppHeader } from '../components/common/AppHeader';
 import { Button } from '../components/common/Button';
-import { OfflineBanner } from '../components/common/OfflineBanner';
 import { SelectField } from '../components/common/SelectField';
 import { TextField } from '../components/common/TextField';
 import { useOnlineStatus } from '../hooks/useOnlineStatus';
@@ -14,6 +14,7 @@ import {
 import type { MovementType } from '../lib/database.types';
 import { messages } from '../lib/messages';
 import { validateMovementQuantity } from '../lib/rules/movement';
+import './RecordMovement.css';
 
 type Props = { preview?: boolean };
 
@@ -91,28 +92,29 @@ export function RecordMovementPage({ preview = false }: Props) {
   }
 
   return (
-    <>
+    <div className="movement-page">
       <AppHeader title="Record movement" signedIn={!preview} />
-      <main className="page-shell movement-form-shell">
-        <div className="movement-form-heading">
-          <Link className="breadcrumb-link" to="/stock">Stock Movements</Link>
-          <span aria-hidden="true">/</span>
-          <span>Record movement</span>
-        </div>
-        <section className="panel movement-form-card">
-          <h1 className="page-title">Record Stock Movement</h1>
-          <p className="page-subtitle">
-            Add or adjust inventory for incoming stock, dispatch, or physical stock count.
-          </p>
+      <main className="movement-main">
+        <section className="movement-card">
+          <div className="movement-heading">
+            <h1>Record Stock Movement</h1>
+            <p>Add or adjust inventory for incoming stock, dispatch, or physical stock count.</p>
+          </div>
 
           {preview ? (
-            <div className="notice notice--warning movement-form-alert" role="note">
+            <div className="movement-preview" role="note">
               Preview only. Stock movements will not be saved.
             </div>
           ) : null}
-          {!online ? <OfflineBanner message={messages.offline} /> : null}
+          {!online ? (
+            <div className="movement-notice" role="status">
+              <WifiOff size={17} aria-hidden="true" />
+              <span>{messages.offline}</span>
+            </div>
+          ) : null}
           {submitError ? (
-            <div className="notice notice--error movement-form-alert" role="alert">
+            <div className="movement-notice" role="alert">
+              <AlertCircle size={17} aria-hidden="true" />
               {submitError}
             </div>
           ) : null}
@@ -124,7 +126,8 @@ export function RecordMovementPage({ preview = false }: Props) {
             </div>
           ) : null}
           {productsQuery.isError ? (
-            <div className="notice notice--error movement-form-alert" role="alert">
+            <div className="movement-notice" role="alert">
+              <AlertCircle size={17} aria-hidden="true" />
               {messages.loadMovementProductsError}
               <button
                 className="text-button"
@@ -136,7 +139,7 @@ export function RecordMovementPage({ preview = false }: Props) {
             </div>
           ) : null}
           {!productsQuery.isLoading && !productsQuery.isError && products.length === 0 ? (
-            <div className="empty-state movement-product-empty">
+            <div className="movement-empty">
               <h2>
                 {!online && !productsQuery.data
                   ? 'No cached product list is available.'
@@ -152,29 +155,35 @@ export function RecordMovementPage({ preview = false }: Props) {
           ) : null}
           {products.length > 0 ? (
             <form className="movement-form" onSubmit={handleSubmit} noValidate>
-              <SelectField
-                label="Product"
-                name="product"
-                required
-                value={productId}
-                onChange={(event) => {
-                  setProductId(event.target.value);
-                  setSubmitError(null);
-                }}
-                options={products.map((product) => ({
-                  value: product.id,
-                  label: `${product.name} (${product.sku})`,
-                }))}
-              />
-
-              <div className="movement-current-stock">
-                <span>Current stock</span>
-                <output aria-label="Current stock">{selectedProduct?.quantity ?? '—'}</output>
+              <div className="movement-field">
+                <SelectField
+                  label="Product"
+                  name="product"
+                  required
+                  value={productId}
+                  onChange={(event) => {
+                    setProductId(event.target.value);
+                    setSubmitError(null);
+                  }}
+                  options={products.map((product) => ({
+                    value: product.id,
+                    label: `${product.name} (${product.sku})`,
+                  }))}
+                />
+                <p className="movement-hint">Choose a product to adjust its inventory.</p>
               </div>
-              <p className="field__hint">Read-only quantity level for the selected product.</p>
 
-              <fieldset className="movement-type-field">
-                <legend className="field__label">Movement type <span className="field__required">*</span></legend>
+              <div className="movement-field">
+                <span className="movement-label">Current stock</span>
+                <div className="movement-stock">
+                  <span><Package size={16} aria-hidden="true" /> Available inventory</span>
+                  <output aria-label="Current stock">{selectedProduct?.quantity ?? '—'}</output>
+                </div>
+                <p className="movement-hint">Read-only quantity for the selected product.</p>
+              </div>
+
+              <fieldset className="movement-field">
+                <legend>Movement type <span>*</span></legend>
                 <div className="movement-type-options">
                   {(['incoming', 'outgoing'] as const).map((type) => (
                     <button
@@ -187,60 +196,62 @@ export function RecordMovementPage({ preview = false }: Props) {
                         setSubmitError(null);
                       }}
                     >
-                      <span className="movement-type-option__mark" aria-hidden="true">
-                        {movementType === type ? '●' : '○'}
-                      </span>
+                      {type === 'incoming'
+                        ? <ArrowDown size={15} aria-hidden="true" />
+                        : <ArrowUp size={15} aria-hidden="true" />}
                       {type === 'incoming' ? 'Incoming' : 'Outgoing'}
                     </button>
                   ))}
                 </div>
-                <span className="field__hint">Specify stock added or removed.</span>
+                <span className="movement-hint">Choose whether stock is being added or removed.</span>
               </fieldset>
 
-              <TextField
-                label="Quantity"
-                name="quantity"
-                type="number"
-                min="1"
-                step="1"
-                required
-                value={quantity}
-                error={quantityError}
-                hint="Required. Enter a whole number greater than zero."
-                onChange={(event) => {
-                  setQuantity(event.target.value);
-                  setQuantityError(undefined);
-                  setSubmitError(null);
-                }}
-              />
-              <div className="field">
-                <label className="field__label" htmlFor="movement-note">
-                  Note <span className="field__optional">(optional)</span>
+              <div className="movement-field">
+                <TextField
+                  label="Quantity"
+                  name="quantity"
+                  type="number"
+                  min="1"
+                  step="1"
+                  required
+                  value={quantity}
+                  error={quantityError}
+                  hint="Required whole number greater than zero."
+                  onChange={(event) => {
+                    setQuantity(event.target.value);
+                    setQuantityError(undefined);
+                    setSubmitError(null);
+                  }}
+                />
+              </div>
+              <div className="movement-field">
+                <label className="movement-label" htmlFor="movement-note">
+                  Note (optional)
                 </label>
                 <textarea
                   id="movement-note"
                   name="note"
-                  className="field__control field__textarea"
                   maxLength={500}
-                  placeholder="Optional audit note or reference..."
+                  placeholder="Optional audit memo or reference..."
                   value={note}
                   onChange={(event) => setNote(event.target.value)}
                 />
-                <span className="field__hint">Optional reason for this movement.</span>
+                <p className="movement-hint">Optional context for your audit records.</p>
               </div>
 
-              <div className="movement-form-actions">
+              <div className="movement-actions">
                 <Button
                   type="submit"
                   loading={saveMutation.isPending}
                   disabled={!online || productsQuery.isError}
+                  className="movement-save"
                 >
                   Save
                 </Button>
                 {preview ? (
                   <button
                     type="button"
-                    className="button button--secondary"
+                    className="button button--secondary movement-reset"
                     onClick={() => {
                       setProductId(previewProducts[0].id);
                       setMovementType('incoming');
@@ -253,7 +264,7 @@ export function RecordMovementPage({ preview = false }: Props) {
                     Reset preview
                   </button>
                 ) : (
-                  <Link to="/stock" className="button button--secondary button--link">
+                  <Link to="/stock" className="movement-cancel">
                     Cancel
                   </Link>
                 )}
@@ -262,6 +273,6 @@ export function RecordMovementPage({ preview = false }: Props) {
           ) : null}
         </section>
       </main>
-    </>
+    </div>
   );
 }

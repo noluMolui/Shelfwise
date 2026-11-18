@@ -41,6 +41,7 @@
   font-size: 12px;
   font-weight: 600;
   padding: 0 14px;
+  text-decoration: none;
   transition: background-color 140ms ease, border-color 140ms ease;
 }
 
@@ -326,6 +327,7 @@
   font: inherit;
   font-size: 10px;
   padding: 0 7px;
+  text-decoration: none;
 }
 
 .catalogue-action-button:hover {

@@ -62,10 +62,13 @@ describe('RecordMovementPage', () => {
   });
 
   it('shows the current stock for the selected product', async () => {
-    renderPage();
+    const { container } = renderPage();
 
     expect(await screen.findByText('6', { selector: 'output' })).toBeInTheDocument();
     expect(screen.getByLabelText(/product/i)).toHaveValue('product-1');
+    expect(container.querySelector('.movement-page')).toBeInTheDocument();
+    expect(container.querySelector('.movement-card')).toBeInTheDocument();
+    expect(container.querySelector('.movement-stock')).toBeInTheDocument();
   });
 
   it('keeps entered values and rejects zero quantity before saving', async () => {

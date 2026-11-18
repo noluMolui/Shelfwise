@@ -13,6 +13,18 @@ The approved visual direction and exported screen designs are maintained in the
 The exported designs cover login, dashboard, product catalogue and form, stock
 movements, low-stock products, suppliers, sign-up, and shared design components.
 
+## Project Links
+
+| Resource | Link or status |
+|---|---|
+| Live application | [ShelfWise on Vercel](https://shelfwise-psi.vercel.app/) |
+| Project board | Not available yet |
+| Loom demonstration | Not recorded yet |
+| Demo logins | Not available yet; no test accounts are configured for public use |
+| Product requirements | [ShelfWise PRD](ShelfWise_PRD_v0_1.pdf) |
+| Implementation plan | [Implementation plan](IMPLEMENTATION_PLAN.md) |
+| Screen designs | [Designs folder](docs/designs/) |
+
 ---
 
 ## Project Overview
@@ -21,7 +33,7 @@ Many small businesses still rely on manual methods to manage their inventory. Th
 
 ShelfWise aims to simplify these processes by providing a centralised platform where businesses can manage their inventory and gain better visibility into their stock levels and inventory value.
 
-### live deployed link : https://shelfwise-psi.vercel.app/login
+The deployed application is available at [https://shelfwise-psi.vercel.app/](https://shelfwise-psi.vercel.app/).
 
 ### Our Objectives
 
@@ -37,20 +49,20 @@ ShelfWise aims to simplify these processes by providing a centralised platform w
 ## Core Features
 
 ### 1. Product Management
-- Add, view, edit and archive products.
+- Add, view and edit products.
 - Maintain product names, SKUs, categories and selling prices.
 - Search and organise product catalogues.
 - Associate products with suppliers.
 
 ### 2. Stock Management
-- Record incoming and outgoing stock.
+- View stock movement history and record incoming and outgoing stock.
 - Automatically update available stock quantities.
 - Maintain a historical record of stock movements.
 - Prevent outgoing stock movements from exceeding available quantities.
 
 ### 3. Low-Stock Alerts
 - Configure minimum stock thresholds for products.
-- Identify products at or below their defined thresholds.
+- Identify products at or below their defined thresholds (the current Low Stock page still uses sample data).
 - Display low-stock products for easy monitoring.
 
 ### 4. Supplier Management
@@ -201,7 +213,7 @@ ShelfWise follows a structured software development process:
 
 1. Product Requirements Document (PRD).
 2. UI/UX design using Google Stitch.
-3. Implementation plan (MASTER.md).
+3. Implementation plan ([IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)).
 4. Feature development.
 5. Automated and manual testing.
 6. Code reviews and pull requests.
@@ -228,6 +240,10 @@ These enhancements are outside the initial MVP scope.
 
 ## Getting Started
 
+The live application is available at [https://shelfwise-psi.vercel.app/](https://shelfwise-psi.vercel.app/).
+Public demo accounts are not available yet. Do not use personal or production
+credentials for assessment or testing.
+
 ### Prerequisites
 
 - Node.js 24 LTS or newer.
@@ -235,13 +251,13 @@ These enhancements are outside the initial MVP scope.
 - Git.
 - Docker Desktop.
 
-### 1. Install dependencies
+### Local development
 
 ```powershell
-npm install
+npm ci
 ```
 
-### 2. Start local Supabase
+Start the local Supabase services:
 
 ```powershell
 npx supabase start
@@ -253,17 +269,19 @@ Copy `.env.example` to `.env`, then set `VITE_SUPABASE_URL` and `VITE_SUPABASE_A
 Copy-Item .env.example .env
 ```
 
-### 3. Apply the database migration
+Apply the local database migrations:
 
 ```powershell
 npx supabase db reset
 ```
 
-### 4. Create a local owner account
+The repository does not yet include test seed accounts. Create an owner account
+locally at `http://127.0.0.1:5173/signup`. The signup form sends `full_name` and
+`business_name` as Supabase Auth metadata; the database trigger creates the
+business and owner profile. With the local stack running, confirmation emails
+can be opened in Inbucket at `http://127.0.0.1:54324`.
 
-Create an owner account at `http://127.0.0.1:5173/signup`. The signup form sends `full_name` and `business_name` as Supabase Auth metadata; the database trigger creates the business and owner profile. With the local stack running, confirmation emails can be opened in Inbucket at `http://127.0.0.1:54324`.
-
-### 5. Run the app
+Run the app:
 
 ```powershell
 npm run dev
@@ -273,7 +291,7 @@ Open `http://127.0.0.1:5173/signup` to create an account, or `/login` to sign in
 
 For a development-only S4 Add screen preview without Supabase, open `http://127.0.0.1:5173/preview/s4`. It uses sample values and never saves changes; this route is not included in production builds.
 
-### 6. Run tests and checks
+Run tests and checks:
 
 ```powershell
 npm test
@@ -283,7 +301,7 @@ npm run check
 ### Production deployment prerequisites
 
 - Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` as Vercel environment variables, then redeploy.
-- Apply `supabase/migrations/20261112180000_s4_product_foundation.sql` to the production Supabase project.
+- Apply all reviewed migrations in `supabase/migrations/` to the hosted Supabase project using the team's deployment process.
 - Set the Supabase Auth Site URL and allowed redirect URLs to the deployed app URL.
 
 Never commit `.env`, real API keys, passwords, or a Supabase service-role key. Only placeholders belong in `.env.example`.
@@ -332,11 +350,16 @@ Nyiko Vumani — [@nyikogivenvumani-web](https://github.com/nyikogivenvumani-web
 
 ## Project Status
 
-**Current Stage:** Initial Development
+**Current Stage:** Deployed MVP in progress
 
-ShelfWise is being developed as a collaborative software engineering project, with a focus on delivering a functional, secure and well-tested inventory management platform.
+The login, signup, product catalogue, stock movement and dashboard flows are
+connected to the Supabase-backed application. Low Stock and Suppliers currently
+display sample data and are not complete live-data features. Public demo
+accounts and a Loom demonstration are not available yet.
 
-The initial release prioritises the essential inventory management workflows before introducing additional functionality.
+The MVP prioritises the essential inventory management workflows before
+introducing additional functionality. See the [implementation plan](IMPLEMENTATION_PLAN.md)
+for the planned scope and progress.
 
 ---
 
