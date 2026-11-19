@@ -1,6 +1,6 @@
 # Database tests
 
-Add pgTAP tests here for schema, constraints, triggers, and RLS permissions.
-Follow the test IDs and expected behavior in Implementation Plan Sections 8,
-9, and 12. Do not rely on this placeholder as evidence that database rules
-exist or have been tested.
+The pgTAP tests here check database behavior and permissions. CI starts a local
+Supabase instance and runs `npx supabase test db` on pull requests and pushes to
+main. To run them locally, start Supabase with `npx supabase start` first, then
+run `npx supabase test db`.
