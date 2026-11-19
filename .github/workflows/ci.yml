@@ -22,6 +22,8 @@ jobs:
 
   database-tests:
     runs-on: ubuntu-latest
+    env:
+      SUPABASE_DB_PORT: 54329
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
