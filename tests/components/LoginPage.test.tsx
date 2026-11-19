@@ -57,6 +57,7 @@ describe('LoginPage', () => {
     fireEvent.change(screen.getByLabelText(/email address/i), {
       target: { value: 'owner@example.com' },
     });
+
     fireEvent.change(screen.getByLabelText(/password/i, { selector: 'input' }), {
       target: { value: 'incorrect' },
     });
@@ -66,6 +67,12 @@ describe('LoginPage', () => {
       'We couldn’t sign you in. Check your details and try again.',
     );
     expect(screen.getByRole('alert').querySelector('svg')).toBeInTheDocument();
+  });
+
+  it('links to the password reset screen', () => {
+    renderPage();
+    expect(screen.getByRole('link', { name: 'Forgot your password?' }))
+      .toHaveAttribute('href', '/forgot-password');
   });
 
   it('locks the form and shows a spinner while submitting', async () => {

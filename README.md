@@ -269,14 +269,18 @@ Copy `.env.example` to `.env`, then set `VITE_SUPABASE_URL` and `VITE_SUPABASE_A
 Copy-Item .env.example .env
 ```
 
-Apply the local database migrations:
+Reset the local database and apply its migrations and seed fixtures (this
+erases existing local database data):
 
 ```powershell
 npx supabase db reset
 ```
 
-The repository does not yet include test seed accounts. Create an owner account
-locally at `http://127.0.0.1:5173/signup`. The signup form sends `full_name` and
+The seed accounts need passwords before they can be used. Set `SUPABASE_URL`,
+`SUPABASE_SERVICE_ROLE_KEY` and `SEED_TEST_PASSWORD` in your local `.env`, then
+run `npm run seed:passwords`. The script only accepts local Supabase URLs.
+Alternatively, create an owner account locally at
+`http://127.0.0.1:5173/signup`. The signup form sends `full_name` and
 `business_name` as Supabase Auth metadata; the database trigger creates the
 business and owner profile. With the local stack running, confirmation emails
 can be opened in Inbucket at `http://127.0.0.1:54324`.
@@ -288,6 +292,9 @@ npm run dev
 ```
 
 Open `http://127.0.0.1:5173/signup` to create an account, or `/login` to sign in. If email confirmation is enabled, confirm the signup from Inbucket. Product management is available to signed-in business owners.
+
+Use **Forgot your password?** on the login screen to request a reset email.
+Open the email in the local inbox and follow its link to choose a new password.
 
 For a development-only S4 Add screen preview without Supabase, open `http://127.0.0.1:5173/preview/s4`. It uses sample values and never saves changes; this route is not included in production builds.
 
@@ -302,7 +309,8 @@ npm run check
 
 - Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` as Vercel environment variables, then redeploy.
 - Apply all reviewed migrations in `supabase/migrations/` to the hosted Supabase project using the team's deployment process.
-- Set the Supabase Auth Site URL and allowed redirect URLs to the deployed app URL.
+- Set the Supabase Auth Site URL to the deployed app URL and allow the deployed
+  `/forgot-password` URL in Supabase Auth redirect URLs.
 
 Never commit `.env`, real API keys, passwords, or a Supabase service-role key. Only placeholders belong in `.env.example`.
 

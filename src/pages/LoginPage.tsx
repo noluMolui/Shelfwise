@@ -118,6 +118,10 @@ export function LoginPage() {
             </button>
           </div>
 
+          <p className="auth-switch">
+            <Link to="/forgot-password">Forgot your password?</Link>
+          </p>
+
           {error ? (
             <p className="notice notice--error" role="alert">
               <CircleAlert size={18} aria-hidden="true" />
