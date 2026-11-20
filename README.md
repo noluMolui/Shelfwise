@@ -20,7 +20,6 @@ movements, low-stock products, suppliers, sign-up, and shared design components.
 | Live application | [ShelfWise on Vercel](https://shelfwise-psi.vercel.app/) |
 | Project board | Not available yet |
 | Loom demonstration | Not recorded yet |
-| Demo logins | Not available yet; no test accounts are configured for public use |
 | Product requirements | [ShelfWise PRD](ShelfWise_PRD_v0_1.pdf) |
 | Implementation plan | [Implementation plan](IMPLEMENTATION_PLAN.md) |
 | Screen designs | [Designs folder](docs/designs/) |
