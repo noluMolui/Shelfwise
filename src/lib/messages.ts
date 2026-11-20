@@ -19,6 +19,9 @@ export const messages = {
   recordMovementError: 'We couldn’t record this movement. Please try again.',
   loadMovementsError: 'We couldn’t load stock activity. Please try again.',
   loadMovementProductsError: 'We couldn’t load your products. Please try again.',
+  loadLowStockProductsError: 'We couldn’t load low-stock products. Please try again.',
+  offlineLowStockRead: 'You’re offline. Showing previously loaded low-stock information where available.',
+  emptyLowStock: 'No low-stock products right now.',
   movementSaved: 'Stock movement recorded.',
   offlineMovementsRead: 'You’re offline. Showing previously loaded stock activity where available.',
 } as const;
