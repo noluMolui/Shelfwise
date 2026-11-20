@@ -4,6 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import LowStock from '../../src/pages/LowStock';
 import { getLowStockProducts } from '../../src/lib/api/lowStock';
+import type { LowStockProduct } from '../../src/lib/api/lowStock';
 
 const onlineStatus = vi.hoisted(() => ({ online: true }));
 
@@ -15,7 +16,7 @@ vi.mock('../../src/lib/api/lowStock', () => ({
   getLowStockProducts: vi.fn(),
 }));
 
-const products = [
+const products: LowStockProduct[] = [
   {
     id: 'product-1',
     name: 'A4 Exercise Book',
