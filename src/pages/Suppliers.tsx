@@ -32,6 +32,9 @@ const emptyForm: SupplierInput = {
   phone: '',
 };
 
+const PHONE_ERROR =
+  'Please enter a valid South African phone number in +27 format, e.g. +27821234567.';
+
 function Suppliers() {
   const queryClient = useQueryClient();
   const profile = useCurrentProfile();
@@ -40,6 +43,7 @@ function Suppliers() {
   const [showForm, setShowForm] = useState(false);
   const [editingSupplier, setEditingSupplier] = useState<Supplier | null>(null);
   const [form, setForm] = useState<SupplierInput>(emptyForm);
+  const [phoneError, setPhoneError] = useState('');
 
   const suppliersQuery = useQuery({
     queryKey: ['suppliers'],
@@ -85,6 +89,7 @@ function Suppliers() {
     setShowForm(false);
     setEditingSupplier(null);
     setForm(emptyForm);
+    setPhoneError('');
     saveMutation.reset();
   }
 
@@ -96,11 +101,22 @@ function Suppliers() {
       email: supplier.email ?? '',
       phone: supplier.phone ?? '',
     });
+    setPhoneError('');
     setShowForm(true);
   }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    const phone = form.phone?.trim() ?? '';
+
+    // Phone numbers are optional, but if supplied they must use +27 format.
+    if (phone && !/^\+27\d{9}$/.test(phone)) {
+      setPhoneError(PHONE_ERROR);
+      return;
+    }
+
+    setPhoneError('');
 
     saveMutation.mutate({
       supplierId: editingSupplier?.id ?? null,
@@ -108,7 +124,7 @@ function Suppliers() {
         name: form.name.trim(),
         contact_person: form.contact_person?.trim() || null,
         email: form.email?.trim() || null,
-        phone: form.phone?.trim() || null,
+        phone: phone || null,
       },
     });
   }
@@ -149,6 +165,7 @@ function Suppliers() {
                   onClick={() => {
                     setEditingSupplier(null);
                     setForm(emptyForm);
+                    setPhoneError('');
                     setShowForm(true);
                   }}
                   className="flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-white hover:bg-[#244767]"
@@ -248,16 +265,46 @@ function Suppliers() {
                     </label>
                     <input
                       type="tel"
+                      maxLength={12}
                       value={form.phone ?? ''}
-                      onChange={(event) =>
-                        setForm({ ...form, phone: event.target.value })
+                      onChange={(event) => {
+                        setForm({
+                          ...form,
+                          phone: event.target.value,
+                        });
+                        setPhoneError('');
+                      }}
+                      aria-invalid={Boolean(phoneError)}
+                      aria-describedby={
+                        phoneError
+                          ? 'supplier-phone-error'
+                          : 'supplier-phone-help'
                       }
-                      className="w-full rounded-lg border border-gray-300 p-3"
+                      className={`w-full rounded-lg border p-3 ${
+                        phoneError
+                          ? 'border-red-500 focus:border-red-500'
+                          : 'border-gray-300'
+                      }`}
                       placeholder="+27XXXXXXXXX"
                     />
-                    <p className="mt-1 text-xs text-gray-500">
-                      Use the South African international format, e.g. +27123456789.
-                    </p>
+
+                    {phoneError ? (
+                      <p
+                        id="supplier-phone-error"
+                        className="mt-1 text-xs text-red-600"
+                        role="alert"
+                      >
+                        {phoneError}
+                      </p>
+                    ) : (
+                      <p
+                        id="supplier-phone-help"
+                        className="mt-1 text-xs text-gray-500"
+                      >
+                        Use the South African international format, e.g.
+                        +27821234567.
+                      </p>
+                    )}
                   </div>
 
                   {saveMutation.isError && (
@@ -439,4 +486,3 @@ function Suppliers() {
 }
 
 export default Suppliers;
-
