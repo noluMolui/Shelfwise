@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Outlet } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
@@ -14,10 +15,16 @@ describe('AppRoutes', () => {
     ['/low-stock', 'Low Stock'],
     ['/suppliers', 'Suppliers'],
   ])('renders the %s page', (path, title) => {
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+
     render(
-      <MemoryRouter initialEntries={[path]}>
-        <AppRoutes />
-      </MemoryRouter>,
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter initialEntries={[path]}>
+          <AppRoutes />
+        </MemoryRouter>
+      </QueryClientProvider>,
     );
 
     expect(screen.getByRole('heading', { name: title })).toBeInTheDocument();
