@@ -284,6 +284,22 @@ Alternatively, create an owner account locally at
 business and owner profile. With the local stack running, confirmation emails
 can be opened in Inbucket at `http://127.0.0.1:54324`.
 
+### Local test accounts
+
+These accounts are seeded for local development only and are not public demo
+logins:
+
+| Role | Email |
+|---|---|
+| Owner | `owner.a@example.com` |
+| Owner | `owner.b@example.com` |
+| Owner | `owner.c@example.com` |
+| Staff | `staff.a@example.com` |
+| Staff | `staff.b@example.com` |
+
+All seeded accounts use the password set in your local `.env` as
+`SEED_TEST_PASSWORD`. Do not reuse a personal or production password.
+
 Run the app:
 
 ```powershell
