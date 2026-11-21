@@ -19,7 +19,7 @@ movements, low-stock products, suppliers, sign-up, and shared design components.
 |---|---|
 | Live application | [ShelfWise on Vercel](https://shelfwise-psi.vercel.app/) |
 | Project board | Not available yet |
-| Loom demonstration | Not recorded yet |
+| Loom demonstration | [Watch the ShelfWise walkthrough](https://www.loom.com/share/fd06e8fbb5814664956c5623e8c3bb7a) |
 | Product requirements | [ShelfWise PRD](ShelfWise_PRD_v0_1.pdf) |
 | Implementation plan | [Implementation plan](IMPLEMENTATION_PLAN.md) |
 | Screen designs | [Designs folder](docs/designs/) |
@@ -362,7 +362,7 @@ Nyiko Vumani — [@nyikogivenvumani-web](https://github.com/nyikogivenvumani-web
 The login, signup, product catalogue, stock movement and dashboard flows are
 connected to the Supabase-backed application. Low Stock and Suppliers currently
 display sample data and are not complete live-data features. Public demo
-accounts and a Loom demonstration are not available yet.
+accounts are not available yet. Watch the [Loom demonstration](https://www.loom.com/share/fd06e8fbb5814664956c5623e8c3bb7a).
 
 The MVP prioritises the essential inventory management workflows before
 introducing additional functionality. See the [implementation plan](IMPLEMENTATION_PLAN.md)
